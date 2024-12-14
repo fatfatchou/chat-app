@@ -3,12 +3,18 @@ import 'package:flutter/material.dart';
 
 class AuthButton extends StatelessWidget {
   final String text;
-  const AuthButton({super.key, required this.text});
+  final VoidCallback onPress;
+
+  const AuthButton({
+    super.key,
+    required this.text,
+    required this.onPress,
+  });
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: onPress,
       style: ElevatedButton.styleFrom(
         backgroundColor: DefaultColors.buttonColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),

@@ -1,5 +1,11 @@
-import 'package:chat_app/core/theme.dart';
+import 'package:chat_app/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:chat_app/features/auth/presentation/bloc/auth_event.dart';
+import 'package:chat_app/features/auth/presentation/bloc/auth_state.dart';
+import 'package:chat_app/features/auth/presentation/widgets/auth_button.dart';
+import 'package:chat_app/features/auth/presentation/widgets/auth_input_field.dart';
+import 'package:chat_app/features/auth/presentation/widgets/prompt.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -13,20 +19,22 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  void _showInputValues() {
-    String username = _usernameController.text;
-    String email = _emailController.text;
-    String password = _passwordController.text;
-
-    print("Username: $username - Email: $email - Password: $password");
-  }
-
   @override
   void dispose() {
     _usernameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  void _onRegister() {
+    BlocProvider.of<AuthBloc>(context).add(
+      RegisterEvent(
+        username: _usernameController.text,
+        email: _emailController.text,
+        password: _passwordController.text,
+      ),
+    );
   }
 
   @override
@@ -39,86 +47,56 @@ class _RegisterPageState extends State<RegisterPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              _buildTextInput('Username', Icons.person, _usernameController),
+              AuthInputField(
+                hint: 'Username',
+                icon: Icons.person,
+                controller: _usernameController,
+              ),
               const SizedBox(height: 20),
-              _buildTextInput('Email', Icons.email, _emailController),
+              AuthInputField(
+                hint: 'Email',
+                icon: Icons.email,
+                controller: _emailController,
+              ),
               const SizedBox(height: 20),
-              _buildTextInput('Password', Icons.lock, _passwordController, isPassword: true),
+              AuthInputField(
+                hint: 'Password',
+                icon: Icons.lock,
+                controller: _passwordController,
+                isPassword: true,
+              ),
               const SizedBox(height: 20),
-              _buildRegisterButton(),
-              const SizedBox(height: 20),
-              _buildLoginPrompt(),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 
-  Widget _buildTextInput(
-      String hint, IconData icon, TextEditingController controller,
-      {bool isPassword = false}) {
-    return Container(
-      decoration: BoxDecoration(
-        color: DefaultColors.sentMessageInput,
-        borderRadius: BorderRadius.circular(25),
-      ),
-      padding: const EdgeInsets.symmetric(
-        horizontal: 20,
-      ),
-      child: Row(
-        children: [
-          Icon(
-            icon,
-            color: Colors.grey,
-          ),
-          const SizedBox(
-            width: 10,
-          ),
-          Expanded(
-            child: TextField(
-              controller: controller,
-              obscureText: isPassword,
-              decoration: InputDecoration(
-                  hintText: hint,
-                  hintStyle: const TextStyle(color: Colors.grey),
-                  border: InputBorder.none),
-              style: const TextStyle(color: Colors.white),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildRegisterButton() {
-    return ElevatedButton(
-      onPressed: _showInputValues,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: DefaultColors.buttonColor,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
-        padding: const EdgeInsets.symmetric(vertical: 15),
-      ),
-      child: const Text(
-        'Register',
-        style: TextStyle(color: Colors.white),
-      ),
-    );
-  }
-
-  Widget _buildLoginPrompt() {
-    return Center(
-      child: GestureDetector(
-        onTap: () {},
-        child: RichText(
-          text: const TextSpan(
-            text: "Already have an account ? ",
-            style: TextStyle(color: Colors.grey),
-            children: [
-              TextSpan(
-                text: "Click here to login",
-                style: TextStyle(color: Colors.blue),
-              )
+              // if the state changes, BlocConsumer updates the part of our page that we want it to chnage
+              BlocConsumer<AuthBloc, AuthState>(
+                builder: (context, state) {
+                  if (state is AuthLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  return AuthButton(
+                    text: 'Register',
+                    onPress: _onRegister,
+                  );
+                },
+                listener: (context, state) {
+                  if (state is AuthSuccess) {
+                    Navigator.pushNamed(context, '/login');
+                  } else if (state is AuthFailure) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(state.error)),
+                    );
+                  }
+                },
+              ),
+              
+              const SizedBox(height: 20),
+              Prompt(
+                title: 'Already have an account ? ',
+                subtitle: 'Click here to login',
+                onTap: () {},
+              ),
             ],
           ),
         ),
