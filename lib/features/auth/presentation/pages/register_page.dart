@@ -95,7 +95,9 @@ class _RegisterPageState extends State<RegisterPage> {
               Prompt(
                 title: 'Already have an account ? ',
                 subtitle: 'Click here to login',
-                onTap: () {},
+                onTap: () {
+                  Navigator.pushNamed(context, '/login');
+                },
               ),
             ],
           ),
