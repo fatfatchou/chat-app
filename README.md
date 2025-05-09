@@ -8,4 +8,4 @@ This app uses **Clean Architecture**:
 
 - **Presentation Layer**: BLoC for UI logic and state
 - **Domain Layer**: UseCases and Entities define business rules
-- **Data Layer**: Firebase APIs handle storage, authentication, and messaging
+- **Data Layer**: APIs handle storage, authentication, and messaging
