@@ -1,4 +1,4 @@
-# 💬 Flutter Chat App with Firebase & BLoC
+# 💬 Flutter Chat App with Websocket & BLoC
 
 A modern, real-time chat application built with Flutter and Websocket. It supports user authentication, 1-to-1 messaging, message timestamps, and instant updates — following Clean Architecture and using the BLoC pattern for scalable state management.
 
