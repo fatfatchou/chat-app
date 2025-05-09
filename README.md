@@ -1,16 +1,11 @@
-# chat_app
+# 💬 Flutter Chat App with Firebase & BLoC
 
-A new Flutter project.
+A modern, real-time chat application built with Flutter and Websocket. It supports user authentication, 1-to-1 messaging, message timestamps, and instant updates — following Clean Architecture and using the BLoC pattern for scalable state management.
 
-## Getting Started
+## 🧱 Architecture Overview
 
-This project is a starting point for a Flutter application.
+This app uses **Clean Architecture**:
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- **Presentation Layer**: BLoC for UI logic and state
+- **Domain Layer**: UseCases and Entities define business rules
+- **Data Layer**: Firebase APIs handle storage, authentication, and messaging
